@@ -1,5 +1,5 @@
-import React from 'react';
-import { Grid, Paper, Typography, Box, Divider, Avatar, Chip, List, ListItem, ListItemText, ListItemAvatar, LinearProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { Grid, Paper, Typography, Box, Divider, Avatar, Chip, List, ListItem, ListItemText, ListItemAvatar, LinearProgress, Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell
@@ -64,6 +64,26 @@ const FeedData = [
 ];
 
 const TeacherDashboard = () => {
+  const [message, setMessage] = useState('');
+  const [selectedGrade, setSelectedGrade] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
+
+  const grades = ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'];
+  const subjects = ['Mathematics', 'Science', 'English', 'History', 'Computer Science'];
+
+  const handleSendMessage = () => {
+    // TODO: Implement message sending logic
+    console.log('Sending message:', {
+      message,
+      grade: selectedGrade,
+      subject: selectedSubject
+    });
+    // Reset fields after sending
+    setMessage('');
+    setSelectedGrade('');
+    setSelectedSubject('');
+  };
+
   return (
     <div>
       <Typography variant="h4" gutterBottom sx={{ mb: 4, textAlign: 'center' }}>
@@ -163,6 +183,74 @@ const TeacherDashboard = () => {
             </Typography>
           </Paper>
         </Grid>
+      </Grid>
+
+      {/* New Messaging Section */}
+      <Grid item xs={12}>
+        <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Send Announcement
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                variant="outlined"
+                label="Message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your announcement here..."
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Grade</InputLabel>
+                <Select
+                  value={selectedGrade}
+                  label="Grade"
+                  onChange={(e) => setSelectedGrade(e.target.value)}
+                >
+                  <MenuItem value="">All Grades</MenuItem>
+                  {grades.map((grade) => (
+                    <MenuItem key={grade} value={grade}>
+                      {grade}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Subject</InputLabel>
+                <Select
+                  value={selectedSubject}
+                  label="Subject"
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                >
+                  <MenuItem value="">All Subjects</MenuItem>
+                  {subjects.map((subject) => (
+                    <MenuItem key={subject} value={subject}>
+                      {subject}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                fullWidth
+                onClick={handleSendMessage}
+                disabled={!message}
+              >
+                Send Announcement
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
       </Grid>
 
       {/* Charts and Tables */}

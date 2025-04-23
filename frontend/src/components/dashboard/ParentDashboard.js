@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, Typography, Box, Divider, Avatar, Chip, List, ListItem, ListItemText, ListItemAvatar, LinearProgress, Card, CardContent, Button } from '@mui/material';
+import { Grid, Paper, Typography, Box, Divider, Avatar, Chip, List, ListItem, ListItemText, ListItemAvatar, LinearProgress, Card, CardContent, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
@@ -107,7 +107,7 @@ const ParentDashboard = () => {
                   <Typography variant="body2">Attendance</Typography>
                 </Box>
               </Grid>
-            <Grid item xs={6} sm={3}>
+              <Grid item xs={6} sm={3}>
                 <Box sx={{ textAlign: 'center', p: 1, borderRadius: 1, bgcolor: '#f5f5f5' }}>
                   <Typography variant="h6" color="warning.main">2</Typography>
                   <Typography variant="body2">Unread Messages</Typography>
@@ -245,44 +245,42 @@ const ParentDashboard = () => {
           </Paper>
         </Grid>
 
-        
-
-{/* Fees Management */}
-<Grid item xs={12} md={6}>
-  <Paper
-    sx={{
-      p: 2,
-      display: 'flex',
-      flexDirection: 'column',
-      height: 350,
-    }}
-  >
-    <Typography variant="h6" gutterBottom component="div">
-      Fees Management
-    </Typography>
-    <Box sx={{ flexGrow: 1 }}>
-      <ResponsiveContainer width="100%" height={250}>
-        <BarChart
-          data={feesData}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="paid" name="Paid Fees" fill="#4caf50" />
-          <Bar dataKey="due" name="Due Amount" fill="#f44336" />
-        </BarChart>
-      </ResponsiveContainer>
-    </Box>
-  </Paper>
-</Grid>
+        {/* Fees Management */}
+        <Grid item xs={12} md={6}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              height: 350,
+            }}
+          >
+            <Typography variant="h6" gutterBottom component="div">
+              Fees Management
+            </Typography>
+            <Box sx={{ flexGrow: 1 }}>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart
+                  data={feesData}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="paid" name="Paid Fees" fill="#4caf50" />
+                  <Bar dataKey="due" name="Due Amount" fill="#f44336" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Box>
+          </Paper>
+        </Grid>
 
         {/* Events */}
         <Grid item xs={12} md={6}>

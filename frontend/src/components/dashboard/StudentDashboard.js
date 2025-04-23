@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, Typography, Box, Divider, Avatar, Chip, List, ListItem, ListItemText, ListItemAvatar, LinearProgress, Card, CardContent, Button, Badge } from '@mui/material';
+import { Grid, Paper, Typography, Box, Divider, Avatar, Chip, List, ListItem, ListItemText, ListItemAvatar, LinearProgress, Card, CardContent, Button, Badge, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
@@ -67,6 +67,37 @@ const weeklyScheduleData = [
 ];
 
 const StudentDashboard = () => {
+  // Mock upcoming events and assignments
+  const upcomingEvents = [
+    { 
+      id: 1, 
+      title: 'Mathematics Quiz', 
+      type: 'Assignment', 
+      date: '2024-04-15', 
+      subject: 'Mathematics' 
+    },
+    { 
+      id: 2, 
+      title: 'Science Project Submission', 
+      type: 'Assignment', 
+      date: '2024-04-20', 
+      subject: 'Science' 
+    },
+    { 
+      id: 3, 
+      title: 'School Sports Day', 
+      type: 'Event', 
+      date: '2024-04-25', 
+      subject: 'School Event' 
+    }
+  ];
+
+  // Mock report cards
+  const reportCards = [
+    { term: 'Term 1', year: '2024', status: 'Available', link: '#' },
+    { term: 'Term 2', year: '2024', status: 'Pending', link: '#' }
+  ];
+
   return (
     <div>
       <Typography variant="h4" gutterBottom sx={{ mb: 4, textAlign: 'center' }}>

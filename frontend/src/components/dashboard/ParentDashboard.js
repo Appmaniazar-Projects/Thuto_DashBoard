@@ -81,6 +81,9 @@ const feedsData = [
 const ParentDashboard = () => {
   return (
     <Box>
+      <Typography variant="h4" gutterBottom sx={{ mb: 4, textAlign: 'center' }}>
+        Parent Dashboard
+      </Typography>
       {/* Student Info & Quick Stats */}
       <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
         <Grid container spacing={3}>

@@ -49,6 +49,9 @@ const EventsData = [
 const AdminDashboard = () => {
   return (
     <Box>
+      <Typography variant="h4" gutterBottom sx={{ mb: 4, textAlign: 'center' }}>
+        Admin Dashboard
+      </Typography>
       {/* KPI Summary Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} md={4}>
@@ -97,33 +100,10 @@ const AdminDashboard = () => {
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Paper
-            elevation={2}
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 120,
-              bgcolor: '#f5f5f5',
-              borderLeft: '4px solid #9c27b0',
-            }}
-          >
-            <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-              Parent Engagement
-            </Typography>
-            <Typography variant="h4" component="div" sx={{ fontWeight: 'medium', color: '#9c27b0' }}>
-              68%
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'warning.main', mt: 1 }}>
-              -1.5% from last month
-            </Typography>
-          </Paper>
-        </Grid>
       </Grid>
 
       {/* PDF Report Generator */}
-      <PDFReportGenerator />
+      {/* <PDFReportGenerator /> */}
 
       {/* Charts and Tables */}
       <Grid container spacing={3}>

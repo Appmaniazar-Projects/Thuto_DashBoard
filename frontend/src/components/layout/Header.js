@@ -27,7 +27,7 @@ const Header = ({ open, toggleDrawer }) => {
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          Cyber Scholar Portal
+          Thuto
         </Typography>
         <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">

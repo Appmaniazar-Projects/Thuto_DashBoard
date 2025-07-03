@@ -1,3 +1,5 @@
+// RegisterUser.js (for Parent and Student roles)
+
 import React, { useState, useEffect } from 'react';
 import {
   Box, Button, TextField, Typography, Paper, Container,
@@ -5,7 +7,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { authAPI } from '../../services/api';
+import api from '../../services/api';
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 const RegisterUser = () => {
@@ -107,7 +109,6 @@ const RegisterUser = () => {
       const result = await window.confirmationResult.confirm(formData.otp);
       const user = result.user;
       const idToken = await user.getIdToken();
-      
       const payload = {
         idToken,
         role: formData.role,
@@ -122,14 +123,13 @@ const RegisterUser = () => {
           guardian: formData.guardian?.trim() || '',
         })
       };
-      
-      await authAPI.register(payload);
-      const loginRes = await authAPI.login({ idToken });
+      await api.post('/auth/register', payload);
+      const loginRes = await api.post('/auth/login', { idToken });
       const { user: userData, token } = loginRes.data;
       login(userData, token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Verification failed. Please try again.');
+      setError('Verification failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -154,7 +154,6 @@ const RegisterUser = () => {
         </Typography>
 
         {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-        }
 
         {step === 1 && (
           <Box sx={{ mt: 2 }}>
@@ -215,13 +214,13 @@ const RegisterUser = () => {
             <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={proceedToPhoneVerification} disabled={loading}>
               Continue to Phone Verification
             </Button>
-            <Button
-              fullWidth
-              variant="text"
-              sx={{ mt: 2 }}
-              onClick={() => navigate('/login')}
-            >
-              Already have an account? Login
+             <Button
+                fullWidth
+                variant="text"
+                sx={{ mt: 2 }}
+                onClick={() => navigate('/login')}
+                >
+                Already have an account? Login
             </Button>
           </Box>
         )}

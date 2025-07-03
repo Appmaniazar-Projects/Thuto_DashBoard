@@ -1,3 +1,5 @@
+// RegisterTeacher.js
+
 import React, { useState, useEffect } from 'react';
 import {
   Box, Button, TextField, Typography, Paper, Container,
@@ -6,7 +8,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { authAPI } from '../../services/api';
+import api from '../../services/api';
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 const RegisterTeacher = () => {
@@ -103,7 +105,6 @@ const RegisterTeacher = () => {
       const result = await window.confirmationResult.confirm(formData.otp);
       const user = result.user;
       const idToken = await user.getIdToken();
-      
       const payload = {
         idToken,
         role: formData.role,
@@ -114,14 +115,13 @@ const RegisterTeacher = () => {
         department: formData.department.trim(),
         subjects: formData.subjects,
       };
-      
-      await authAPI.register(payload);
-      const loginRes = await authAPI.login({ idToken });
+      await api.post('/auth/register', payload);
+      const loginRes = await api.post('/auth/login', { idToken });
       const { user: userData, token } = loginRes.data;
       login(userData, token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Verification failed. Please try again.');
+      setError('Verification failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -157,7 +157,6 @@ const RegisterTeacher = () => {
         </Typography>
 
         {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-        }
 
         {step === 1 && (
           <Box sx={{ mt: 2 }}>
@@ -190,8 +189,6 @@ const RegisterTeacher = () => {
                 <MenuItem value="Science">Science</MenuItem>
                 <MenuItem value="English">English</MenuItem>
                 <MenuItem value="History">History</MenuItem>
-                <MenuItem value="Physical Education">Physical Education</MenuItem>
-                <MenuItem value="Arts">Arts</MenuItem>
               </Select>
             </FormControl>
 
@@ -201,7 +198,7 @@ const RegisterTeacher = () => {
               </Typography>
               <FormGroup>
                 <Grid container spacing={1}>
-                  {['Mathematics', 'English', 'Science', 'History', 'Physical Education', 'Arts'].map(subject => (
+                  {['Mathematics', 'English', 'Science', 'History'].map(subject => (
                     <Grid item xs={6} key={subject}>
                       <FormControlLabel
                         control={<Checkbox value={subject} checked={formData.subjects.includes(subject)} onChange={handleSubjectChange} disabled={loading} />}
@@ -216,13 +213,13 @@ const RegisterTeacher = () => {
             <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={proceedToPhoneVerification} disabled={loading}>
               Continue to Phone Verification
             </Button>
-            <Button
-              fullWidth
-              variant="text"
-              sx={{ mt: 2 }}
-              onClick={() => navigate('/login')}
-            >
-              Already have an account? Login
+             <Button
+                fullWidth
+                variant="text"
+                sx={{ mt: 2 }}
+                onClick={() => navigate('/login')}
+              >
+                Already have an account? Login
             </Button>
           </Box>
         )}

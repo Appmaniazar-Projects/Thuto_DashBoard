@@ -154,6 +154,7 @@ const RegisterUser = () => {
         </Typography>
 
         {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+        }
 
         {step === 1 && (
           <Box sx={{ mt: 2 }}>

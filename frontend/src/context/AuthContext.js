@@ -1,75 +1,76 @@
-// src/context/AuthContext.js
-// Authentication Context for Thuto School Management System
-// Manages user authentication state and provides authentication utilities
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-import React, { createContext, useState, useContext, useEffect } from 'react';
+export const AuthContext = createContext();
 
-// Create a context for sharing authentication state across components
-const AuthContext = createContext();
+export const AuthProvider = ({ children }) => {
+  const [authState, setAuthState] = useState({
+    user: null,
+    token: null,
+    loading: true
+  });
 
-// Custom hook to easily access authentication context
-export const useAuth = () => useContext(AuthContext);
-
-const AuthProvider = ({ children }) => {
-  // State to track current authenticated user
-  const [currentUser, setCurrentUser] = useState(null);
-  
-  // Loading state to prevent rendering before authentication check
-  const [loading, setLoading] = useState(true);
-
-  // Check for existing user session on initial application load
-  // Retrieves user data from local storage to maintain session
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      // Restore user session if previous login exists
-      setCurrentUser(JSON.parse(storedUser));
+    // Check for existing session on app load
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    if (token && user) {
+      try {
+        setAuthState({
+          user: JSON.parse(user),
+          token,
+          loading: false
+        });
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setAuthState({ user: null, token: null, loading: false });
+      }
+    } else {
+      setAuthState(prev => ({ ...prev, loading: false }));
     }
-    // Mark loading as complete to render application
-    setLoading(false);
   }, []);
 
-  // Login function to authenticate user and store session
   const login = (userData, token) => {
-    // Update current user state
-    setCurrentUser(userData);
-    
-    // Persist user data and authentication token in local storage
-    localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setAuthState({ user: userData, token, loading: false });
   };
 
-  // Logout function to clear user session
   const logout = () => {
-    // Clear current user state
-    setCurrentUser(null);
-    
-    // Remove user data and token from local storage
-    localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setAuthState({ user: null, token: null, loading: false });
   };
 
-  // Provide authentication-related values and methods to child components
-  const value = {
-    currentUser,   // Current authenticated user
-    login,         // Method to log in user
-    logout,        // Method to log out user
-    loading        // Loading state for initial authentication check
+  const updateUser = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setAuthState(prev => ({ ...prev, user: userData }));
   };
+
+  // Don't render children until auth state is determined
+  if (authState.loading) {
+    return <div>Loading...</div>; // You can replace with a proper loading component
+  }
 
   return (
-    // Provide authentication context to all child components
-    <AuthContext.Provider value={value}>
-      {/* Only render children after loading state is complete */}
-      {!loading && children}
+    <AuthContext.Provider value={{ 
+      ...authState, 
+      login, 
+      logout, 
+      updateUser,
+      currentUser: authState.user // For backward compatibility
+    }}>
+      {children}
     </AuthContext.Provider>
   );
 };
 
-export default AuthProvider;
-
-// Key Authentication Principles:
-// 1. Centralized authentication state management
-// 2. Persistent user sessions using local storage
-// 3. Secure context for sharing authentication information
-// 4. Prevents rendering before authentication check is complete
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

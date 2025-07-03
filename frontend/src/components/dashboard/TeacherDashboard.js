@@ -8,8 +8,8 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import EventIcon from '@mui/icons-material/Event';
 import PersonIcon from '@mui/icons-material/Person';
 import MessageIcon from '@mui/icons-material/Message';
-
-
+import { useEvents } from '../../context/EventsContext';
+import { useAuth } from '../../context/AuthContext';
 
 // Sample data for demonstration
 const attendanceData = [
@@ -20,42 +20,15 @@ const attendanceData = [
   { name: 'Fri', present: 26, absent: 4, late: 1 },
 ];
 
-const assignmentCompletionData = [
-  { name: 'Math Quiz', complete: 85, incomplete: 15 },
-  { name: 'Science Lab', complete: 92, incomplete: 8 },
-  { name: 'History Essay', complete: 78, incomplete: 22 },
-  { name: 'English Report', complete: 88, incomplete: 12 },
-  { name: 'Group Project', complete: 95, incomplete: 5 },
-];
-
-const performanceTrendData = [
-  { month: 'Sep', average: 76 },
-  { month: 'Oct', average: 78 },
-  { month: 'Nov', average: 75 },
-  { month: 'Dec', average: 80 },
-  { month: 'Jan', average: 82 },
-  { month: 'Feb', average: 84 },
-];
-
-
 
 const COLORS = ['#0088FE', '#FF8042'];
 
-const studentRosterData = [
-  { id: 1, name: 'Emma Thompson', attendance: 98, performance: 92, lastActive: '10 min ago', status: 'Present' },
-  { id: 2, name: 'Noah Garcia', attendance: 95, performance: 88, lastActive: '1 hour ago', status: 'Present' },
-  { id: 3, name: 'Olivia Martinez', attendance: 100, performance: 95, lastActive: '30 min ago', status: 'Present' },
-  { id: 4, name: 'Liam Johnson', attendance: 85, performance: 78, lastActive: '2 days ago', status: 'Absent' },
-  { id: 5, name: 'Sophia Lee', attendance: 92, performance: 90, lastActive: '1 day ago', status: 'Present' },
-];
 
 const EventsData = [
-  { id: 1, title: 'Career Day', dueDate: 'Tomorrow'},
-  { id: 2, title: 'Field Trip to the Science Museum', dueDate: 'Mar 22'},
-  { id: 3, title: 'Sports Day', dueDate: 'Mar 25'},
+  { id: 1, title: 'Math Assignment #3', dueDate: 'June 30, 2025' },
+  { id: 2, title: 'Science Project', dueDate: 'July 5, 2025' },
+  { id: 3, title: 'History Report', dueDate: 'July 10, 2025' },
 ];
-
-
 
 const FeedData = [
   { id: 1, parent: 'Mr. Thompson', student: 'Emma Thompson', time: '2 hours ago', message: 'Question about the upcoming field trip' },
@@ -64,6 +37,8 @@ const FeedData = [
 ];
 
 const TeacherDashboard = () => {
+  const { addEvent } = useEvents();
+
   const [message, setMessage] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -72,7 +47,6 @@ const TeacherDashboard = () => {
   const subjects = ['Mathematics', 'Science', 'English', 'History', 'Computer Science'];
 
   const handleSendMessage = () => {
-    // TODO: Implement message sending logic
     console.log('Sending message:', {
       message,
       grade: selectedGrade,
@@ -82,6 +56,13 @@ const TeacherDashboard = () => {
     setMessage('');
     setSelectedGrade('');
     setSelectedSubject('');
+  };
+
+  const handleGradeAssignment = () => {
+    addEvent({
+      action: 'Graded assignment for Grade 10',
+      createdBy: { name: 'Current', surname: 'Teacher', title: 'Ms.', role: 'teacher' }
+    });
   };
 
   return (
@@ -104,13 +85,10 @@ const TeacherDashboard = () => {
             }}
           >
             <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-              {/* Class Attendance Today */}
+              Subject
             </Typography>
             <Typography variant="h4" component="div" sx={{ fontWeight: 'medium', color: '#1976d2' }}>
               Geography
-            </Typography>
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              {/* 29/31 students present */}
             </Typography>
           </Paper>
         </Grid>
@@ -127,13 +105,10 @@ const TeacherDashboard = () => {
             }}
           >
             <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-              {/* Assignment Completion */}
+              Subject
             </Typography>
             <Typography variant="h4" component="div" sx={{ fontWeight: 'medium', color: '#2e7d32' }}>
               Physical Science
-            </Typography>
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              {/* Average across all assignments */}
             </Typography>
           </Paper>
         </Grid>
@@ -150,13 +125,10 @@ const TeacherDashboard = () => {
             }}
           >
             <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-              {/* Class Average */}
+              Subject
             </Typography>
             <Typography variant="h4" component="div" sx={{ fontWeight: 'medium', color: '#ed6c02' }}>
               Agriculture
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'success.main', mt: 1 }}>
-              {/* +2.4% from last month */}
             </Typography>
           </Paper>
         </Grid>
@@ -173,84 +145,83 @@ const TeacherDashboard = () => {
             }}
           >
             <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-              {/* Parent Messages */}
+              Subject
             </Typography>
             <Typography variant="h4" component="div" sx={{ fontWeight: 'medium', color: '#9c27b0' }}>
               CAT
-            </Typography>
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              {/* 3 new since yesterday */}
             </Typography>
           </Paper>
         </Grid>
       </Grid>
 
       {/* New Messaging Section */}
-      <Grid item xs={12}>
-        <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Send Announcement
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                multiline
-                rows={4}
-                variant="outlined"
-                label="Message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your announcement here..."
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Grade</InputLabel>
-                <Select
-                  value={selectedGrade}
-                  label="Grade"
-                  onChange={(e) => setSelectedGrade(e.target.value)}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid item xs={12}>
+          <Paper sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Send Announcement
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  variant="outlined"
+                  label="Message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type your announcement here..."
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Grade</InputLabel>
+                  <Select
+                    value={selectedGrade}
+                    label="Grade"
+                    onChange={(e) => setSelectedGrade(e.target.value)}
+                  >
+                    <MenuItem value="">All Grades</MenuItem>
+                    {grades.map((grade) => (
+                      <MenuItem key={grade} value={grade}>
+                        {grade}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Subject</InputLabel>
+                  <Select
+                    value={selectedSubject}
+                    label="Subject"
+                    onChange={(e) => setSelectedSubject(e.target.value)}
+                  >
+                    <MenuItem value="">All Subjects</MenuItem>
+                    {subjects.map((subject) => (
+                      <MenuItem key={subject} value={subject}>
+                        {subject}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  fullWidth
+                  onClick={handleSendMessage}
+                  disabled={!message}
                 >
-                  <MenuItem value="">All Grades</MenuItem>
-                  {grades.map((grade) => (
-                    <MenuItem key={grade} value={grade}>
-                      {grade}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  Send Announcement
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Subject</InputLabel>
-                <Select
-                  value={selectedSubject}
-                  label="Subject"
-                  onChange={(e) => setSelectedSubject(e.target.value)}
-                >
-                  <MenuItem value="">All Subjects</MenuItem>
-                  {subjects.map((subject) => (
-                    <MenuItem key={subject} value={subject}>
-                      {subject}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <Button 
-                variant="contained" 
-                color="primary" 
-                fullWidth
-                onClick={handleSendMessage}
-                disabled={!message}
-              >
-                Send Announcement
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </Grid>
       </Grid>
 
       {/* Charts and Tables */}
@@ -340,158 +311,98 @@ const TeacherDashboard = () => {
           </Paper>
         </Grid>
 
-        {/* Assignment Completion */}
+
+        {/* Events */}
         <Grid item xs={12} md={6}>
           <Paper
             sx={{
               p: 2,
               display: 'flex',
               flexDirection: 'column',
-              height: 350,
+              height: 300,
             }}
           >
             <Typography variant="h6" gutterBottom component="div">
-              Assignment Completion Rates
+              Events
             </Typography>
-            <ResponsiveContainer width="100%" height="90%">
-              <BarChart
-                data={assignmentCompletionData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
+            <Box sx={{ mb: 2 }}>
+              <Button 
+                variant="outlined" 
+                size="small"
+                onClick={handleGradeAssignment}
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="complete" fill="#4caf50" />
-                <Bar dataKey="incomplete" fill="#f44336" />
-              </BarChart>
-            </ResponsiveContainer>
+                Simulate Grade Assignment
+              </Button>
+            </Box>
+            <Divider sx={{ mb: 2 }} />
+            <List>
+              {EventsData.map((assignment) => (
+                <ListItem key={assignment.id} divider>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <AssignmentIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText 
+                    primary={assignment.title}
+                    secondary={`Due: ${assignment.dueDate}`} 
+                  />
+                </ListItem>
+              ))}
+            </List>
           </Paper>
         </Grid>
 
-        {/* Performance Trend */}
+        {/* Feed */}
         <Grid item xs={12} md={6}>
           <Paper
             sx={{
               p: 2,
               display: 'flex',
               flexDirection: 'column',
-              height: 350,
+              height: 300,
             }}
           >
             <Typography variant="h6" gutterBottom component="div">
-              Performance Trend
+              Feed
             </Typography>
-            <ResponsiveContainer width="100%" height="90%">
-              <LineChart
-                data={performanceTrendData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis domain={[70, 90]} />
-                <Tooltip />
-                <Line type="monotone" dataKey="average" stroke="#8884d8" activeDot={{ r: 8 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <Box sx={{ height: '100%' }}>
+              <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <Typography variant="subtitle2" gutterBottom>Recent Feed</Typography>
+                <Divider sx={{ mb: 1 }} />
+                <List dense>
+                  {FeedData.map((message) => (
+                    <ListItem
+                      key={message.id}
+                      sx={{
+                        px: 0,
+                        alignItems: 'flex-start',
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar sx={{ width: 32, height: 32 }}>
+                          <MessageIcon fontSize="small" />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={`${message.parent} (${message.student})`}
+                        secondary={`${message.time}: ${message.message}`}
+                        primaryTypographyProps={{
+                          variant: 'body2',
+                          sx: { textAlign: 'left' },
+                        }}
+                        secondaryTypographyProps={{
+                          variant: 'caption',
+                          sx: { textAlign: 'left' },
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Box>
           </Paper>
         </Grid>
-
-       {/* Events */}
-<Grid item xs={12} md={6}>
-  <Paper
-    sx={{
-      p: 2,
-      display: 'flex',
-      flexDirection: 'column',
-      height: 300,
-    }}
-  >
-    <Typography variant="h6" gutterBottom component="div">
-      Events
-    </Typography>
-    <Divider sx={{ mb: 2 }} />
-    <List>
-      {EventsData.map((assignment) => (
-        <ListItem key={assignment.id} divider>
-          <ListItemAvatar>
-            <Avatar>
-              <AssignmentIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText 
-            primary={assignment.title}
-            secondary={`Due: ${assignment.dueDate}`} 
-          />
-        </ListItem>
-      ))}
-    </List>
-  </Paper>
-</Grid>
-
-        
-         {/* Feed */}
-<     Grid item xs={12} md={6}>
-  <Paper
-    sx={{
-      p: 2,
-      display: 'flex',
-      flexDirection: 'column',
-      height: 300,
-    }}
-  >
-    <Typography variant="h6" gutterBottom component="div">
-      Feed
-    </Typography>
-    <Box sx={{ height: '100%' }}>
-      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Typography variant="subtitle2" gutterBottom>Recent Feed</Typography>
-        <Divider sx={{ mb: 1 }} />
-        <List dense>
-          {FeedData.map((message) => (
-            <ListItem
-              key={message.id}
-              sx={{
-                px: 0,
-                alignItems: 'flex-start',
-              }}
-            >
-              <ListItemAvatar>
-                <Avatar sx={{ width: 32, height: 32 }}>
-                  <MessageIcon fontSize="small" />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={`${message.parent} (${message.student})`}
-                secondary={`${message.time}: ${message.message}`}
-                primaryTypographyProps={{
-                  variant: 'body2',
-                  sx: { textAlign: 'left' },
-                }}
-                secondaryTypographyProps={{
-                  variant: 'caption',
-                  sx: { textAlign: 'left' },
-                }}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    </Box>
-  </Paper>
-</Grid>
-
       </Grid>
     </div>
   );

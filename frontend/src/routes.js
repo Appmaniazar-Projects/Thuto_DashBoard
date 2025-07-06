@@ -1,57 +1,68 @@
 // src/routes.js
-// This file defines the routing configuration for the Thuto School Management System
-// It uses React Router for handling navigation between different components
 
-import React from 'react';
 import { Navigate } from 'react-router-dom';
-
-// Import authentication and dashboard components
 import Login from './components/auth/Login';
+import RegisterWelcome from './components/auth/RegisterWelcome';
+import RegisterTeacher from './components/auth/RegisterTeacher';
+import RegisterUser from './components/auth/RegisterUser';
+import AdminLogin from './components/auth/AdminLogin';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import StudentReports from './components/reports/StudentReports';
 import ParentReports from './components/reports/ParentReports';
+import CalendarPage from './pages/CalendarPage';
+import MessagesPage from './pages/MessagesPage';
 
 const routes = [
   {
-    // Login page - entry point for all users
+    path: "/register",
+    element: <RegisterWelcome /> // 👈 welcome screen with choices
+  },
+  {
+    path: "/register/teacher",
+    element: <RegisterTeacher />
+  },
+  {
+    path: "/register/user",
+    element: <RegisterUser />
+  },
+  {
     path: '/login',
-    element: <Login />,
+    element: <Login />
   },
   {
-    // Main dashboard - dynamically renders based on user role
-    // Wrapped in ProtectedRoute to ensure only authenticated users can access
+    path: '/admin/login',
+    element: <AdminLogin />
+  },
+  {
     path: '/dashboard',
-    element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
+    element: <ProtectedRoute><DashboardPage /></ProtectedRoute>
   },
   {
-    // Student-specific reports page
-    // Requires authentication and student role
     path: '/student-reports',
-    element: <ProtectedRoute><StudentReports /></ProtectedRoute>,
+    element: <ProtectedRoute><StudentReports /></ProtectedRoute>
   },
   {
-    // Parent-specific reports page
-    // Requires authentication and parent role
     path: '/parent-reports',
-    element: <ProtectedRoute><ParentReports /></ProtectedRoute>,
+    element: <ProtectedRoute><ParentReports /></ProtectedRoute>
   },
   {
-    // Default route - redirects to dashboard if no specific path is provided
     path: '/',
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to="/dashboard" replace />
   },
   {
-    // Catch-all route - redirects to login for any undefined routes
     path: '*',
-    element: <Navigate to="/login" replace />,
-  }
+    element: <Navigate to="/login" replace />
+  },
+  {
+  path: '/calendar',
+  element: <ProtectedRoute><CalendarPage /></ProtectedRoute>
+},
+{
+  path: '/messages',
+  element: <ProtectedRoute><MessagesPage /></ProtectedRoute>
+},
+
 ];
 
 export default routes;
-
-// Key Navigation Principles:
-// 1. All routes are protected to ensure user authentication
-// 2. Dashboard dynamically renders based on user role
-// 3. Specific report pages are role-specific
-// 4. Undefined routes redirect to login for security
